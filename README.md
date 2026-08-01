@@ -1,57 +1,89 @@
-# Sample Hardhat 3 Project (`node:test` and `viem`)
+# Riverbed
 
-This project showcases a Hardhat 3 project using the native Node.js test runner (`node:test`) and the `viem` library for Ethereum interactions.
+**An automated yield router for FXRP on Flare.**
 
-To learn more about Hardhat 3, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3](https://hardhat.org/hardhat3-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+Deposit FXRP into a single vault; Riverbed continuously compares real yield rates across connected lending pools and automatically routes funds to whichever one currently pays the most — no manual switching, no missed yield sitting in the wrong place.
 
-## Project Overview
+🔗 **Live app:** https://riverbed-ten.vercel.app/
+📦 **Deployed on:** Flare Coston2 testnet
+🏆 **Flare Summer Signal — Bounty 1: Interoperable Asset Products**
 
-This example project includes:
+## Target user
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using [`node:test`](nodejs.org/api/test.html), the new Node.js native test runner, and [`viem`](https://viem.sh/).
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+FXRP holders on Flare who want passive, optimized yield without manually monitoring and switching between lending markets themselves — the same problem yield aggregators like Yearn solve for ERC-20 assets, applied to Flare's FAsset ecosystem.
 
-## Usage
+---
 
-### Running Tests
+## What it does
 
-To run all the tests in the project, execute the following command:
+- Deposit FXRP, receive shares representing your portion of the vault (standard vault accounting)
+- Riverbed automatically routes new deposits to whichever registered pool currently offers the best real rate
+- Live FXRP/USD valuation via Flare's FTSOv2 oracle
+- Withdraw anytime for FXRP — principal plus whatever yield accrued while it was working
 
+## How it uses Flare
+
+- **FAssets (FXRP)** — Riverbed's core asset is FXRP, Flare's trustless wrapped XRP. The product exists specifically to give FXRP somewhere productive to go.
+- **FTSOv2** — live FXRP/USD price feed integrated directly into the contract (`getXrpUsdPrice()` / `getVaultValueUsd()`).
+- Built against an interface (`ICToken.sol`) that exactly matches Kinetic's real Compound V2-style lending market on Flare Mainnet — so Riverbed's routing logic requires no changes to work against the real market once deployed there.
+
+## Why a mock pool on testnet
+
+Kinetic's real FXRP lending market exists on **Flare Mainnet only**, not Coston2. Since testnet FXRP has no real lending market to route into, a realistic mock pool (`MockKToken.sol`) was built matching Kinetic's real interface exactly — same function signatures, same accounting model — so the routing logic is a drop-in fit for the real contracts. This is documented transparently rather than hidden; see `contracts/mocks/MockKToken.sol` for the full reasoning in comments.
+
+## Contracts (Coston2 testnet)
+
+| Contract | Address |
+|---|---|
+| Riverbed | `0x786a38bCa7880DED068F03B763aCEE7A703547ED` |
+| PoolLow (3% APR) | `0xd5F89cD0227fEa485704BFe55CaC91FC29fEb5F7` |
+| PoolMid (8% APR) | `0xF91fca1327867584865c38c095f053Ba2BaA33D2` |
+| PoolHigh (15% APR) | `0xA6A3073AF927BCAb02d747B7a81b9d1c06f5FADb` |
+| FXRP (Coston2) | `0x0b6A3645c240605887a5532109323A3E12273dc7` |
+
+## Project structure
+
+```
+contracts/          Solidity source (Riverbed.sol, mocks, interfaces)
+test/                Foundry + node:test test suite
+scripts/             Deployment/interaction scripts
+ignition/            Hardhat Ignition deployment modules
+frontend/            React + Vite + Tailwind app (deposit/withdraw UI, live on-chain data)
+```
+
+## Running locally
+
+**Contracts:**
 ```shell
+npm install
 npx hardhat test
 ```
 
-You can also selectively run the Solidity or `node:test` tests:
-
+**Frontend:**
 ```shell
-npx hardhat test solidity
-npx hardhat test nodejs
+cd frontend
+npm install
+npm run dev
 ```
 
-### Make a deployment to Sepolia
+## What was newly built during the hackathon
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
+Everything in this repo was built from zero during the Flare Summer Signal window:
 
-To run the deployment to a local chain:
+- `Riverbed.sol` — multi-pool, shares-based yield vault with automatic (on-deposit) and owner-triggered rebalancing to the best-rate pool
+- FTSOv2 price integration for live FXRP/USD valuation
+- `ICToken.sol` — a Compound V2 / Kinetic-compatible interface, so the routing logic works identically against the real Kinetic contracts once deployed on Flare Mainnet
+- `MockKToken.sol` — a realistic mock lending pool for testnet demonstration, including bounded automatic yield accrual and a fairness fix ensuring a pool's first depositor doesn't inherit unearned yield
+- Full test suite: deposit, rebalance, re-rebalance when a better pool appears, withdrawal, and accrual behavior
+- Complete frontend — wallet connection, live on-chain data throughout (position, pool rates, active pool), working deposit/withdraw flows with real transaction handling and error states
 
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
-```
+## Roadmap
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+1. Deploy against the real Kinetic FXRP market on Flare Mainnet — no logic changes required, the interface already matches
+2. Add more pool integrations as additional FXRP lending markets launch on Flare
+3. Contract-level circuit breaker for pool liquidity risk
+4. Delivery/performance verification layer for pool selection beyond raw rate comparison
 
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
+## Traction
 
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
-
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
-```
-
-After setting the variable, you can run the deployment with the Sepolia network:
-
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
-```
+Built entirely within the hackathon window; no distribution or user testing yet beyond the team's own end-to-end verification on Coston2.
