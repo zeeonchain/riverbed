@@ -68,6 +68,7 @@ contract MockKToken is ERC20, ICToken {
     function redeem(uint256 redeemTokens) external returns (uint256) {
         uint256 underlyingAmount = (redeemTokens * exchangeRateStored()) / 1e18;
         _burn(msg.sender, redeemTokens);
+        if (totalSupply() == 0) reserve = 0; // stale reserve bookkeeping is meaningless once empty
         uint256 cash = underlying.balanceOf(address(this));
         if (underlyingAmount > cash) underlyingAmount = cash;
         underlying.transfer(msg.sender, underlyingAmount);
