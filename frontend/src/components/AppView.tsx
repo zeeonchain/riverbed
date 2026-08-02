@@ -35,19 +35,21 @@ function AppView() {
     abi: RiverbedAbi.abi,
     functionName: 'shares',
     args: address ? [address] : undefined,
-    query: { enabled: !!address },
+    query: { enabled: !!address, refetchInterval: 5000 },
   })
 
   const { data: totalShares, refetch: refetchTotalShares } = useReadContract({
     address: RIVERBED_ADDRESS,
     abi: RiverbedAbi.abi,
     functionName: 'totalShares',
+    query: { refetchInterval: 5000 },
   })
 
   const { data: totalValue, refetch: refetchTotalValue } = useReadContract({
     address: RIVERBED_ADDRESS,
     abi: RiverbedAbi.abi,
     functionName: 'totalValue',
+    query: { refetchInterval: 5000 },
   })
 
   const { data: fxrpBalance, refetch: refetchBalance } = useReadContract({
@@ -55,7 +57,7 @@ function AppView() {
     abi: erc20Abi,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    query: { enabled: !!address },
+    query: { enabled: !!address, refetchInterval: 5000 },
   })
 
   const { writeContract: approve, data: approveHash, isPending: approvePending, error: approveError } = useWriteContract()

@@ -13,9 +13,9 @@ const poolAbi = [
 ] as const
 
 const POOLS = [
-  { name: 'PoolLow', address: '0xd5F89cD0227fEa485704BFe55CaC91FC29fEb5F7' as const },
-  { name: 'PoolMid', address: '0xF91fca1327867584865c38c095f053Ba2BaA33D2' as const },
-  { name: 'PoolHigh', address: '0xA6A3073AF927BCAb02d747B7a81b9d1c06f5FADb' as const },
+  { name: 'PoolLow', address: '0x3894b277B77Dd1f13B3c0D59A3c59bFE876fd3fd' as const },
+  { name: 'PoolMid', address: '0x44Df8874aDF67DE9D4156Ffd3D65A43F75f30c62' as const },
+  { name: 'PoolHigh', address: '0x2E686989b83026E6f585749EF491eB869765123F' as const },
 ]
 
 // converts a per-second rate (1e18-scaled) into an approximate APR percentage

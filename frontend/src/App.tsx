@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import LoadingScreen from './components/LoadingScreen'
 import Transition from './components/Transition'
 import Header from './components/Header'
@@ -16,11 +16,6 @@ type View = 'home' | 'app'
 function App() {
   const [stage, setStage] = useState<Stage>('glitch')
   const [view, setView] = useState<View>('home')
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-  }, [theme])
 
   if (stage === 'glitch') {
     return <LoadingScreen onComplete={() => setStage('transition')} />
@@ -30,18 +25,10 @@ function App() {
     return <Transition onComplete={() => setStage('app')} />
   }
 
-  const header = (
-    <Header
-      theme={theme}
-      onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      onLaunchApp={() => setView('app')}
-    />
-  )
-
   if (view === 'app') {
     return (
       <div>
-        {header}
+        <Header onLaunchApp={() => setView('app')} showLaunchApp={false} />
         <AppView />
       </div>
     )
@@ -49,7 +36,7 @@ function App() {
 
   return (
     <div className="space-y-16">
-      {header}
+      <Header onLaunchApp={() => setView('app')} showLaunchApp={true} />
       <Hero />
       <SectionDeposit />
       <SectionRouting />
