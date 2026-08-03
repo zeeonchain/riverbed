@@ -57,9 +57,9 @@ contract MockKToken is ERC20, ICToken {
     }
 
     function mint(uint256 mintAmount) external returns (uint256) {
-        // Starting a fresh "generation" of depositors after the pool was
-        // completely empty — restart the unlock clock so they don't
-        // inherit progress that happened before they had any stake.
+        // First depositor of this "generation" — restart the unlock
+        // clock right now, so they don't inherit progress that happened
+        // before they had any stake in the pool.
         if (totalSupply() == 0 && reserveFundedTotal > 0) {
             reserveStart = block.timestamp;
         }
@@ -79,6 +79,13 @@ contract MockKToken is ERC20, ICToken {
         if (underlyingAmount > cash) underlyingAmount = cash;
         principalCash = underlyingAmount >= principalCash ? 0 : principalCash - underlyingAmount;
         underlying.transfer(msg.sender, underlyingAmount);
+        // Pool is fully empty again — clear reserve bookkeeping so the
+        // next generation of depositors paces correctly against only
+        // what's newly funded for them, not stale historical totals.
+        if (totalSupply() == 0) {
+            reserveFundedTotal = 0;
+            reserveStart = 0;
+        }
         return 0;
     }
 
