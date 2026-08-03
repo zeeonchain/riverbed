@@ -35,11 +35,17 @@ Kinetic's real FXRP lending market exists on **Flare Mainnet only**, not Coston2
 
 | Contract | Address |
 |---|---|
-| Riverbed | `0x786a38bCa7880DED068F03B763aCEE7A703547ED` |
-| PoolLow (3% APR) | `0xd5F89cD0227fEa485704BFe55CaC91FC29fEb5F7` |
-| PoolMid (8% APR) | `0xF91fca1327867584865c38c095f053Ba2BaA33D2` |
-| PoolHigh (15% APR) | `0xA6A3073AF927BCAb02d747B7a81b9d1c06f5FADb` |
+| Riverbed | `0x5307F8b578fE3dE5D628df416e133D5DAEcBe84E` |
+| PoolLow (3% APR) | `0xdA084A44073729725802B92357492fF56F4Ec1Eb` |
+| PoolMid (8% APR) | `0xbe740D8Fae7771aA61B04DfD649a62d1782aFFd1` |
+| PoolHigh (15% APR) | `0x7aD124418e3Cdb68BBA115CFC1E71A9cAF802b52` |
 | FXRP (Coston2) | `0x0b6A3645c240605887a5532109323A3E12273dc7` |
+
+## A note on testing the demo
+
+Each pool's yield reserve unlocks gradually over 3 minutes once funded, then stays flat until topped up again — this mirrors how a real lending market's interest income arrives continuously, without needing an always-on off-chain process for a testnet demo. Since Kinetic's real interest-bearing market only exists on Flare Mainnet, this testnet demo periodically re-funds each pool's reserve (`fundReserve()`) to keep the accrual mechanism visibly running for testers. On mainnet, this would happen automatically and continuously via real borrower activity — no manual step needed.
+
+If you're testing and the yield appears flat, the reserve may have already fully unlocked and been claimed by an earlier depositor — that's expected, not a bug. Deposit, and if nothing seems to be accruing, that's a sign the reserve needs a top-up before your test.
 
 ## Project structure
 
