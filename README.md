@@ -92,4 +92,4 @@ Everything in this repo was built from zero during the Flare Summer Signal windo
 
 ## Traction
 
-Built entirely within the hackathon window; no distribution or user testing yet beyond the team's own end-to-end verification on Coston2.
+Built entirely within the hackathon window. 2 people tested the live app on Coston2 testnet ahead of submission — feedback noted the deposit/withdraw flow was easy to interact with, and the loading screen and landing page design stood out positively.
