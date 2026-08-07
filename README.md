@@ -35,10 +35,10 @@ Kinetic's real FXRP lending market exists on **Flare Mainnet only**, not Coston2
 
 | Contract | Address |
 |---|---|
-| Riverbed | `0x542c98b7aaa6CFcF7e5d44B52bB7ED958eB75e36` |
-| PoolLow (3% APR) | `0xB7f75559Cb686287a15827477c809542763b1b84` |
-| PoolMid (8% APR) | `0x5a86BAAeFD2407A104D1F3BdbD3d638E8cb73925` |
-| PoolHigh (15% APR) | `0xd308FD86827848Ea864b9bEEE8427e5847ab85e3` |
+| Riverbed | `0x5a51CcA24c57574B2f59BFDbb7851f931fAf6caA` |
+| PoolLow (3% APR) | `0x230B9cf57ED822354E8847192D62F006CF1D9291` |
+| PoolMid (8% APR) | `0x37e5ba65f201d8A268E99851A078209F25BB6B67` |
+| PoolHigh (15% APR) | `0x849B05757A5525610aE9836597a27Ce481389336` |
 | FXRP (Coston2) | `0x0b6A3645c240605887a5532109323A3E12273dc7` |
 
 ## A note on testing the demo
