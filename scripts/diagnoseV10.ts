@@ -1,6 +1,6 @@
 import { network } from "hardhat";
 
-const RIVERBED_ADDRESS = "0x5307F8b578fE3dE5D628df416e133D5DAEcBe84E";
+const RIVERBED_ADDRESS = "0x542c98b7aaa6CFcF7e5d44B52bB7ED958eB75e36";
 const FXRP = "0x0b6A3645c240605887a5532109323A3E12273dc7";
 
 const poolAbi = [

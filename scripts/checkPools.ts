@@ -1,6 +1,6 @@
 import { network } from "hardhat";
 
-const RIVERBED_ADDRESS = "0x786a38bCa7880DED068F03B763aCEE7A703547ED";
+const RIVERBED_ADDRESS = "0x5a51CcA24c57574B2f59BFDbb7851f931fAf6caA";
 
 const { viem } = await network.create({
   network: "coston2",
