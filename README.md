@@ -45,7 +45,10 @@ Kinetic's real FXRP lending market exists on **Flare Mainnet only**, not Coston2
 
 Each pool's yield reserve unlocks gradually over 3 minutes once funded, then stays flat until topped up again — this mirrors how a real lending market's interest income arrives continuously, without needing an always-on off-chain process for a testnet demo. Since Kinetic's real interest-bearing market only exists on Flare Mainnet, this testnet demo periodically re-funds each pool's reserve (`fundReserve()`) to keep the accrual mechanism visibly running for testers. On mainnet, this would happen automatically and continuously via real borrower activity — no manual step needed.
 
-If you're testing and the yield appears flat, the reserve may have already fully unlocked and been claimed by an earlier depositor — that's expected, not a bug. Deposit, and if nothing seems to be accruing, that's a sign the reserve needs a top-up before your test.
+Depending on when you test relative to when the reserve was last funded, you may see one of three things, all expected and correct:
+- **Gradual growth** — if you deposit within the 3-minute window after a funding, your position's value will visibly climb toward the full unlocked amount.
+- **An instant jump to the full amount** — if the reserve had already been funded and fully unlocked (its 3-minute window already elapsed) before you deposited, your position starts at the full matured value immediately rather than climbing. This is correct: the reserve's own accrual already ran its course; a new depositor after that point is simply buying in at the current, fully-settled rate — the same way a real lending market's rate reflects however much interest has already accrued, whoever joins.
+- **Flat, unchanging value at exactly 1:1** — if the reserve has already been fully unlocked and claimed by an earlier depositor's withdrawal, there's nothing left to grow until the reserve is topped up again.
 
 ## Project structure
 
