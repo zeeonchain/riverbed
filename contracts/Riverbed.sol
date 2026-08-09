@@ -111,9 +111,22 @@ contract Riverbed is Ownable {
         shares[msg.sender] -= shareAmount;
         totalShares -= shareAmount;
 
-        uint256 idle = fxrp.balanceOf(address(this));
-        if (amount > idle && activePool != address(0)) {
-            ICToken(activePool).redeemUnderlying(amount - idle);
+        if (activePool != address(0)) {
+            if (totalShares == 0) {
+                // Last depositor leaving — fully drain the pool so its
+                // own accounting (kTokens/reserve) resets cleanly too,
+                // rather than leaving dust that desyncs Riverbed's and
+                // the pool's views of "empty."
+                uint256 stuck = ICToken(activePool).balanceOfUnderlying(address(this));
+                if (stuck > 0) {
+                    ICToken(activePool).redeemUnderlying(stuck);
+                }
+            } else {
+                uint256 idle = fxrp.balanceOf(address(this));
+                if (amount > idle) {
+                    ICToken(activePool).redeemUnderlying(amount - idle);
+                }
+            }
         }
 
         fxrp.transfer(msg.sender, amount);

@@ -3,9 +3,9 @@ import { network } from "hardhat";
 const FXRP_ADDRESS = "0x0b6A3645c240605887a5532109323A3E12273dc7";
 
 const pools = {
-  PoolLow: { address: "0xB7f75559Cb686287a15827477c809542763b1b84", amount: 100_000n },
-  PoolMid: { address: "0x5a86BAAeFD2407A104D1F3BdbD3d638E8cb73925", amount: 200_000n },
-  PoolHigh: { address: "0xd308FD86827848Ea864b9bEEE8427e5847ab85e3", amount: 300_000n },
+  PoolLow: { address: "0x70C97A438438cD516dE7CC7ba74e80384AC95950", amount: 100_000n },
+  PoolMid: { address: "0x5d6D630FfB92bbF6B47c2222C3a26c00Ffc9907f", amount: 200_000n },
+  PoolHigh: { address: "0x76A3A8DC149a839768E21A976795eB59d6e15B98", amount: 300_000n },
 };
 
 const erc20Abi = [

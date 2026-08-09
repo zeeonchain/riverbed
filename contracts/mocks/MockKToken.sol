@@ -91,13 +91,22 @@ contract MockKToken is ERC20, ICToken {
 
     function redeemUnderlying(uint256 redeemAmount) external returns (uint256) {
         uint256 kTokens = (redeemAmount * 1e18) / exchangeRateStored();
+        uint256 callerBalance = balanceOf(msg.sender);
+        if (callerBalance > kTokens && callerBalance - kTokens <= 10) {
+            kTokens = callerBalance;
+        }
         _burn(msg.sender, kTokens);
         uint256 cash = underlying.balanceOf(address(this));
         uint256 payout = redeemAmount > cash ? cash : redeemAmount;
         principalCash = payout >= principalCash ? 0 : principalCash - payout;
         underlying.transfer(msg.sender, payout);
+        if (totalSupply() == 0) {
+            reserveFundedTotal = 0;
+            reserveStart = 0;
+        }
         return 0;
     }
+
 
     function balanceOfUnderlying(address account) external returns (uint256) {
         return (balanceOf(account) * exchangeRateStored()) / 1e18;
